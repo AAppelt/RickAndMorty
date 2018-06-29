@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_margin="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imagePerson"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:scaleType="fitCenter"
+            android:src="@color/colorDividerGray" />
+
+        <TextView
+            android:id="@+id/char_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@id/imagePerson"
+            android:text="Rick Sanchez"
+            android:textColor="@color/colorSecondaryDark"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/statusPerson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/char_name"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@id/imagePerson"
+            android:text="Status: Alive"
+            android:textColor="@color/colorSecondaryDark"
+            android:textSize="@dimen/small_text" />
+
+        <TextView
+            android:id="@+id/speciesPerson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statusPerson"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@id/imagePerson"
+            android:text="Species: Human"
+            android:textColor="@color/colorSecondaryDark"
+            android:textSize="@dimen/small_text" />
+
+        <TextView
+            android:id="@+id/genderPerson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/speciesPerson"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_toEndOf="@id/imagePerson"
+            android:text="Gender: Male"
+            android:textColor="@color/colorSecondaryDark"
+            android:textSize="@dimen/small_text" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
