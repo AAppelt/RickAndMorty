@@ -1,12 +1,14 @@
 package com.caramelheaven.rickandmorty.controllers;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.caramelheaven.rickandmorty.R;
@@ -28,6 +30,7 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    String string = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,27 +44,25 @@ public class MainActivity extends BaseActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         navigationView.setNavigationItemSelectedListener(item -> {
-            item.setChecked(true);
             switch (item.getItemId()) {
                 case R.id.nav_locations:
-                    Toast.makeText(this, "Locations", Toast.LENGTH_SHORT).show();
+                    item.setChecked(true);
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragmentContainer, LocationsFragment.newInstance())
-                            .addToBackStack(null)
                             .commit();
                     drawerLayout.closeDrawers();
                     break;
                 case R.id.nav_persons:
-                    Toast.makeText(this, "Persons", Toast.LENGTH_SHORT).show();
+                    item.setChecked(true);
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragmentContainer, CharactersFragment.newInstance())
-                            .addToBackStack(null)
                             .commit();
                     drawerLayout.closeDrawers();
                     break;
             }
+            drawerLayout.closeDrawers();
             return true;
         });
     }
