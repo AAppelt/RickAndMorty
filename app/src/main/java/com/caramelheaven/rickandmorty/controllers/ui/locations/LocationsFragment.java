@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.caramelheaven.rickandmorty.R;
+import com.caramelheaven.rickandmorty.controllers.ui.BaseFragment;
 import com.caramelheaven.rickandmorty.datasourse.entity.location.Location;
 import com.caramelheaven.rickandmorty.utils.AonItemClickListener;
 import com.caramelheaven.rickandmorty.utils.AppUtil;
@@ -26,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class LocationsFragment extends Fragment {
+public class LocationsFragment extends BaseFragment {
 
     private LocationViewModel viewModel;
     private LocationAdapter adapter;
@@ -61,7 +62,37 @@ public class LocationsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         viewModel = ViewModelProviders.of(this).get(LocationViewModel.class);
+        viewModel.init();
 
+        setAdapterAndRecycler();
+        observeLocations();
+    }
+
+    private void observeLocations() {
+        viewModel.getLocations().observe(this, locations -> {
+            Timber.d("size locations: " + locations.size());
+            if (!AppUtil.isNetworkConnectionAvailable() && locations.size() == 0) {
+                networkStatus.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+            if (locations.size() != 0) {
+                for (Location location : locations) {
+                    Timber.d("lications: " + location.getName());
+                }
+                progressBar.setVisibility(View.GONE);
+                adapter.updateAdapter(locations);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.d("I'm in onDestroy");
+    }
+
+    @Override
+    protected void setAdapterAndRecycler() {
         recyclerView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
@@ -87,34 +118,5 @@ public class LocationsFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        observeLocations();
-    }
-
-    private void observeLocations() {
-        viewModel.getLocations().observe(this, locations -> {
-            Timber.d("size locations: " + locations.size());
-            if (!AppUtil.isNetworkConnectionAvailable() && locations.size() == 0) {
-                networkStatus.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-            if (locations.size() != 0) {
-                for (Location location : locations) {
-                    Timber.d("lications: " + location.getName());
-                }
-                progressBar.setVisibility(View.GONE);
-                adapter.updateAdapter(locations);
-            }
-        });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Timber.d("I'm in onDestroy");
     }
 }

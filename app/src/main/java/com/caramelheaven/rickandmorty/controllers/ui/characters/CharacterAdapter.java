@@ -22,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class CharacterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -64,6 +65,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.characterList.clear();
         this.characterList.addAll(list);
         diffResult.dispatchUpdatesTo(this);
+        Timber.d("I'm updated");
     }
 
     @Override

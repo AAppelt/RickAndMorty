@@ -36,6 +36,7 @@ public class CharacterRepository {
     }
 
     public LiveData<List<Character>> getCharacters() {
+        Timber.d("Checking that this method call once!");
         //try to refresh data from network, if it available
         if (AppUtil.isNetworkConnectionAvailable()) {
             //in this we just load first page for our list

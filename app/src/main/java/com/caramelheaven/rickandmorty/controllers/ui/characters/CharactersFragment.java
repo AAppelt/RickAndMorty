@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.caramelheaven.rickandmorty.R;
+import com.caramelheaven.rickandmorty.controllers.ui.BaseFragment;
 import com.caramelheaven.rickandmorty.utils.AonItemClickListener;
 import com.caramelheaven.rickandmorty.utils.AppUtil;
 import com.caramelheaven.rickandmorty.utils.EndlessRecyclerViewScrollListener;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class CharactersFragment extends Fragment {
+public class CharactersFragment extends BaseFragment {
 
     private CharacterViewModel viewModel;
     private CharacterAdapter adapter;
@@ -60,12 +61,18 @@ public class CharactersFragment extends Fragment {
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_characters, container, false);
     }
 
-    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         viewModel = ViewModelProviders.of(this).get(CharacterViewModel.class);
+        viewModel.init();
 
+        setAdapterAndRecycler();
+        observeCharacters();
+    }
+
+    @Override
+    protected void setAdapterAndRecycler() {
         recyclerView.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
@@ -92,12 +99,6 @@ public class CharactersFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        observeCharacters();
     }
 
     private void observeCharacters() {

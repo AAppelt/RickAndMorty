@@ -36,6 +36,7 @@ public class LocationRepository {
     }
 
     public LiveData<List<Location>> getLocations() {
+        Timber.d("Checking that this method call once!");
         if (AppUtil.isNetworkConnectionAvailable()) {
             loadLocations(1);
         }

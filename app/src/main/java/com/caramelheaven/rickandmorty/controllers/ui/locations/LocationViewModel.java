@@ -17,10 +17,16 @@ public class LocationViewModel extends ViewModel {
 
     @Inject
     LocationRepository repository;
+    private LiveData<List<Location>> liveData;
 
     public LocationViewModel() {
         Timber.d("LocationViewModel created");
         RickAndMorty.getComponent().injectLocationViewModel(this);
+    }
+
+    public void init() {
+        if (this.liveData != null) return;
+        liveData = repository.getLocations();
     }
 
     public void loadMorePagination(int page) {
@@ -28,7 +34,7 @@ public class LocationViewModel extends ViewModel {
     }
 
     public LiveData<List<Location>> getLocations() {
-        return repository.getLocations();
+        return liveData;
     }
 
     @Override

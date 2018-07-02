@@ -17,10 +17,16 @@ public class CharacterViewModel extends ViewModel {
 
     @Inject
     CharacterRepository repository;
+    private LiveData<List<Character>> liveData;
 
     public CharacterViewModel() {
         Timber.d("CharacterViewModel constructor created");
         RickAndMorty.getComponent().injectCharacterViewModel(this);
+    }
+
+    public void init(){
+        if (this.liveData != null) return;
+        liveData = repository.getCharacters();
     }
 
     //load characters with support simple pagination
@@ -29,7 +35,8 @@ public class CharacterViewModel extends ViewModel {
     }
 
     public LiveData<List<Character>> getCharacters() {
-        return repository.getCharacters();
+        Timber.d("Get characters");
+        return liveData;
     }
 
     @Override
