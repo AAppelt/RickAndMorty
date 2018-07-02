@@ -48,17 +48,20 @@ public class MainActivity extends BaseActivity {
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragmentContainer, LocationsFragment.newInstance())
+                            .addToBackStack(null)
                             .commit();
+                    drawerLayout.closeDrawers();
                     break;
                 case R.id.nav_persons:
                     Toast.makeText(this, "Persons", Toast.LENGTH_SHORT).show();
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragmentContainer, CharactersFragment.newInstance())
+                            .addToBackStack(null)
                             .commit();
+                    drawerLayout.closeDrawers();
                     break;
             }
-            drawerLayout.closeDrawers();
             return true;
         });
     }

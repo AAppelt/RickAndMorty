@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.realm.Realm;
 
+
 public class CharacterDao {
 
     public CharacterDao() {
@@ -30,16 +31,4 @@ public class CharacterDao {
             }
         }
     }
-    //useless method, but in the future I still it here
-/*
-    private Realm realm;
-
-    public LiveData<List<Character>> getAllCharacters() {
-        realm = Realm.getDefaultInstance();
-        return new LiveRealmResults<>(realm.where(Character.class).findAllAsync());
-    }
-
-    public void onDeleted() {
-        realm.close();
-    }*/
 }

@@ -1,6 +1,7 @@
 package com.caramelheaven.rickandmorty.controllers.ui.characters;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -18,11 +19,13 @@ import android.widget.Toast;
 
 import com.caramelheaven.rickandmorty.R;
 import com.caramelheaven.rickandmorty.controllers.ui.BaseFragment;
+import com.caramelheaven.rickandmorty.datasourse.entity.character.Character;
 import com.caramelheaven.rickandmorty.utils.AonItemClickListener;
 import com.caramelheaven.rickandmorty.utils.AppUtil;
 import com.caramelheaven.rickandmorty.utils.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +58,12 @@ public class CharactersFragment extends BaseFragment {
         super.onAttach(context);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = ViewModelProviders.of(this).get(CharacterViewModel.class);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,11 +73,21 @@ public class CharactersFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
-        viewModel = ViewModelProviders.of(this).get(CharacterViewModel.class);
         viewModel.init();
-
         setAdapterAndRecycler();
-        observeCharacters();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel.getCharacters().observe(this, stateObserver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Timber.d("I'm deleted");
+        viewModel.getCharacters().removeObserver(stateObserver);
     }
 
     @Override
@@ -101,8 +120,9 @@ public class CharactersFragment extends BaseFragment {
         });
     }
 
-    private void observeCharacters() {
-        viewModel.getCharacters().observe(this, characters -> {
+    private Observer<List<Character>> stateObserver = new Observer<List<Character>>() {
+        @Override
+        public void onChanged(@Nullable List<Character> characters) {
             if (!AppUtil.isNetworkConnectionAvailable() && characters.size() == 0) {
                 networkStatus.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
@@ -111,12 +131,6 @@ public class CharactersFragment extends BaseFragment {
                 progressBar.setVisibility(View.GONE);
                 adapter.updateAdapter(characters);
             }
-        });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Timber.d("I'm deleted");
-    }
+        }
+    };
 }

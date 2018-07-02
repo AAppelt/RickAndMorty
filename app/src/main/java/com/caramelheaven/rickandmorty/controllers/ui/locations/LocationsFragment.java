@@ -1,5 +1,6 @@
 package com.caramelheaven.rickandmorty.controllers.ui.locations;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.caramelheaven.rickandmorty.utils.AppUtil;
 import com.caramelheaven.rickandmorty.utils.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,30 +67,19 @@ public class LocationsFragment extends BaseFragment {
         viewModel.init();
 
         setAdapterAndRecycler();
-        observeLocations();
     }
 
-    private void observeLocations() {
-        viewModel.getLocations().observe(this, locations -> {
-            Timber.d("size locations: " + locations.size());
-            if (!AppUtil.isNetworkConnectionAvailable() && locations.size() == 0) {
-                networkStatus.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-            if (locations.size() != 0) {
-                for (Location location : locations) {
-                    Timber.d("lications: " + location.getName());
-                }
-                progressBar.setVisibility(View.GONE);
-                adapter.updateAdapter(locations);
-            }
-        });
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel.getLocations().observe(this, stateObserver);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Timber.d("I'm in onDestroy");
+        viewModel.getLocations().removeObserver(stateObserver);
     }
 
     @Override
@@ -119,4 +110,23 @@ public class LocationsFragment extends BaseFragment {
             }
         });
     }
+
+    //We need to add this because after close we need to remove observer
+    private Observer<List<Location>> stateObserver = new Observer<List<Location>>() {
+        @Override
+        public void onChanged(@Nullable List<Location> locations) {
+            Timber.d("size locations: " + locations.size());
+            if (!AppUtil.isNetworkConnectionAvailable() && locations.size() == 0) {
+                networkStatus.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+            if (locations.size() != 0) {
+                for (Location location : locations) {
+                    Timber.d("lications: " + location.getName());
+                }
+                progressBar.setVisibility(View.GONE);
+                adapter.updateAdapter(locations);
+            }
+        }
+    };
 }
